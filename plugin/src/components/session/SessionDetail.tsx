@@ -12,7 +12,7 @@ interface SessionDetailProps {
   onBack: () => void
   onJoin: (name: string, dish: string) => void
   loading?: boolean
-  onRefresh: () => void // Add this
+  onRefresh: () => void 
 }
 
 export const SessionDetail: React.FC<SessionDetailProps> = ({

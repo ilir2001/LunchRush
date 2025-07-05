@@ -68,6 +68,7 @@ export default function App() {
   const handleBack = () => {
     setSessionId(null)
     setSession(null)
+    loadSessions() // Refresh the sessions list when going back
   }
 
   return (

@@ -5,18 +5,14 @@
 - [Go](https://golang.org/dl/) 1.18+
 - [Node.js](https://nodejs.org/) 18+
 - [Dapr CLI](https://docs.dapr.io/get-dapr/cli/)
-- [Docker](https://www.docker.com/) (for running Redis state store/pubsub)
+- [Docker](https://www.docker.com/) (required for Dapr default components)
 
 ---
 
 ## 1. Start Dapr Infrastructure
 
 LunchRush uses Dapr for state management and pub/sub.  
-You need a Redis container running for Dapr’s state store and pubsub:
-
-```sh
-docker run -d --name lunchrush-redis -p 6379:6379 redis
-```
+Dapr's default `dapr init` command already sets up a Redis container for you.
 
 Initialize Dapr components (if not already):
 
@@ -60,7 +56,7 @@ npm run dev
 
 ## Troubleshooting
 
-- If you see connection errors, ensure both backend and Redis are running.
+- If you see connection errors, ensure both backend and Dapr are running.
 - Dapr sidecar logs can help debug state/pubsub issues.
 
 ---
