@@ -56,7 +56,7 @@ export const ProposeForm: React.FC<ProposeFormProps> = ({ onSubmit, loading }) =
                             />
                         </div>
                         <div className="md:col-span-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Dishes</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Dishes</label>
                             {dishes.map((dish, idx) => (
                                 <div key={idx} className="flex items-center mb-2">
                                     <Input

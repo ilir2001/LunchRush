@@ -1,82 +1,75 @@
-# 🍱 Huly Plugin Challenge: LunchRush
+# LunchRush – How to Run
 
-Welcome to the **LunchRush** challenge — your mission is to build a collaborative Huly plugin that helps employees coordinate their daily lunch orders in a fun and efficient way.
+## Prerequisites
 
----
-
-## 🧠 The Idea
-
-Lunchtime coordination is always messy: scattered messages, missed orders, and last-minute chaos. **LunchRush** solves this by offering a central place — inside Huly — where team members can:
-
-- Propose or vote on restaurants and dishes
-- Join the group lunch order
-- See what others are getting
-- Nominate someone to place the order
-- Lock the order at a set time and notify everyone
-
-This should be a collaborative experience. Think "Trello meets lunch."
+- [Go](https://golang.org/dl/) 1.18+
+- [Node.js](https://nodejs.org/) 18+
+- [Dapr CLI](https://docs.dapr.io/get-dapr/cli/)
+- [Docker](https://www.docker.com/) (for running Redis state store/pubsub)
 
 ---
 
-## 🧱 What You'll Build
+## 1. Start Dapr Infrastructure
 
-### 🧩 A Huly Plugin (Frontend)
-- Display the current day’s lunch session
-- Allow users to join, select meals, and interact with others
-- Show a live view of participants and their choices
-- Lock the session and display the final summary
+LunchRush uses Dapr for state management and pub/sub.  
+You need a Redis container running for Dapr’s state store and pubsub:
 
-### 🛠 A Go Microservice (Backend)
-- Use **[Dapr](https://dapr.io/)** building blocks for:
-  - **Pub/Sub** for real-time updates across users
-  - **State Store** for shared session data (e.g. Redis)
-  - Optional: **Bindings** or **Secrets** to simulate 3rd party APIs
+```sh
+docker run -d --name lunchrush-redis -p 6379:6379 redis
+```
 
----
+Initialize Dapr components (if not already):
 
-## 🚀 What We’re Looking For
-
-This challenge is designed to evaluate your ability to:
-
-- 🧠 Model collaborative workflows
-- 👩‍💻 Write clean, idiomatic Go code
-- ⚙️ Use Dapr to manage distributed state and pub/sub
-- 🎨 Create a clear, user-friendly interface inside Huly
+```sh
+dapr init
+```
 
 ---
 
-## 🧪 Bonus Ideas
+## 2. Run the Go Microservice
 
-You're welcome (but not required) to go further:
+```sh
+cd microservice
+go mod tidy
+dapr run --app-id lunchrush-backend --app-port 8080 --dapr-http-port 3500 --components-path ./components go run ./cmd/main.go
+```
 
-- "Reorder last week’s lunch"
-- Anonymous voting or reactions
-- Scheduled daily reminders
-- Light gamification: who orders most often? Who’s always late?
-
----
-
-## 📝 Submission Guidelines
-
-1. Fork this repo
-2. Implement your solution in:
-   - `plugin/` for the Huly plugin
-   - `microservice/` for your Go+Dapr backend
-3. Include a `README.md` with:
-   - Setup instructions
-   - Anything you'd like us to know
-4. After 1 week, we'll check the forks
+- The backend will be available at [http://localhost:8080](http://localhost:8080)
+- Make sure your Dapr components (for Redis state store and pubsub) are configured in `microservice/components/` (create this folder if needed).
 
 ---
 
-## 🕒 Time Limit
+## 3. Run the React Frontend
 
-You have **1 week** from when you accept the challenge. Don't worry about polish — we value thoughtfulness, clarity, and how you approach collaboration.
+```sh
+cd plugin
+npm install
+npm run dev
+```
 
-## 🧠 Ask AI for Help
-
-Use whatever AI tool is in your toolbelt. If you don’t have any… I’ve got bad news for you 🙂
+- The frontend will be available at [http://localhost:5173](http://localhost:5173) (default Vite port).
 
 ---
 
-Happy coding and buon appetito! 🍽️
+## 4. Usage
+
+- Open the frontend in your browser.
+- Propose a new lunch session, join orders, and see live updates.
+
+---
+
+## Troubleshooting
+
+- If you see connection errors, ensure both backend and Redis are running.
+- Dapr sidecar logs can help debug state/pubsub issues.
+
+---
+
+## Project Structure
+
+- `microservice/` – Go+Dapr backend
+- `plugin/` – React+Vite frontend
+
+---
+
+For more details, see the [README.md](README.md) files in each folder.
