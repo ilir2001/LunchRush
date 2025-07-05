@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import type { LunchSession } from '../types'
+import type { LunchSession, Participant } from '../types'
 
 const API_URL = 'http://localhost:8080/api/lunchsession'
 
@@ -90,6 +90,50 @@ export const useLunchAPI = () => {
     }
   }, [])
 
+  const nominate = useCallback(async (id: string, nominee: Participant): Promise<LunchSession | null> => {
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch(`${API_URL}/${id}/nominate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nominee),
+      })
+      if (res.ok) {
+        return await res.json()
+      } else {
+        setError('Failed to nominate')
+        return null
+      }
+    } catch {
+      setError('Could not connect to backend')
+      return null
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+  
+  const lockSession = useCallback(async (id: string): Promise<LunchSession | null> => {
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch(`${API_URL}/${id}/lock`, {
+        method: 'POST',
+      })
+      if (res.ok) {
+        return await res.json()
+      } else {
+        setError('Failed to lock session')
+        return null
+      }
+    } catch {
+      setError('Could not connect to backend')
+      return null
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   return {
     loading,
     error,
@@ -97,5 +141,7 @@ export const useLunchAPI = () => {
     fetchSession,
     createSession,
     updateSession,
+    nominate,
+    lockSession,
   }
 }

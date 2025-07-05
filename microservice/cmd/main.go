@@ -21,6 +21,9 @@ func main() {
 	router.HandleFunc("/api/lunchsession", internal.CreateLunchSessionHandler(daprClient)).Methods("POST")
 	router.HandleFunc("/api/lunchsession/{id}", internal.GetLunchSessionHandler(daprClient)).Methods("GET")
 	router.HandleFunc("/api/lunchsession", internal.ListLunchSessionsHandler(daprClient)).Methods("GET")
+	router.HandleFunc("/api/lunchsession/{id}/nominate", internal.NominateHandler(daprClient)).Methods("POST")
+	router.HandleFunc("/api/lunchsession/{id}/lock", internal.LockSessionHandler(daprClient)).Methods("POST")
+
 	// Add CORS middleware
 	handler := cors.AllowAll().Handler(router)
 

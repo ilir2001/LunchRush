@@ -8,6 +8,7 @@ interface JoinFormProps {
   session: LunchSession
   onSubmit: (name: string, dish: string) => void
   loading?: boolean
+  disabled?: boolean
 }
 
 export const JoinForm: React.FC<JoinFormProps> = ({ session, onSubmit, loading }) => {

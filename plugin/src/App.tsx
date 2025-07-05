@@ -96,6 +96,7 @@ export default function App() {
                 onBack={handleBack}
                 onJoin={handleJoinOrder}
                 loading={loading}
+                onRefresh={() => loadSession(session.id)} 
               />
             )}
           </CardContent>

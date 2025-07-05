@@ -10,4 +10,6 @@ export type LunchSession = {
     restaurant: string
     dishes: string[]
     locked: boolean
+    nominated?: Participant
+    lockTime?: string
 }

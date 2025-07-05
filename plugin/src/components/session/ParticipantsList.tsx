@@ -1,11 +1,13 @@
 import React from 'react'
 import type { Participant } from '../../types'
+import { Badge } from '../ui/Badge'
 
 interface ParticipantsListProps {
   participants: Participant[]
+  nominatedId?: string // Pass the nominated participant's id as a prop
 }
 
-export const ParticipantsList: React.FC<ParticipantsListProps> = ({ participants }) => {
+export const ParticipantsList: React.FC<ParticipantsListProps> = ({ participants, nominatedId }) => {
   return (
     <div className="bg-indigo-50 rounded-xl p-6 border border-indigo-100">
       <h3 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -28,7 +30,12 @@ export const ParticipantsList: React.FC<ParticipantsListProps> = ({ participants
                   </span>
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800">{participant.name}</p>
+                  <p className="font-semibold text-gray-800 flex items-center gap-2">
+                    {participant.name}
+                    {nominatedId === participant.id && (
+                      <Badge variant="success" className="ml-2">Nominated</Badge>
+                    )}
+                  </p>
                   <p className="text-sm text-gray-600">Participant</p>
                 </div>
               </div>

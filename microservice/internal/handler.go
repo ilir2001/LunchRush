@@ -54,3 +54,44 @@ func ListLunchSessionsHandler(daprClient client.Client) http.HandlerFunc {
 		json.NewEncoder(w).Encode(sessions)
 	}
 }
+
+func NominateHandler(daprClient client.Client) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := mux.Vars(r)["id"]
+		var nominee Participant
+		if err := json.NewDecoder(r.Body).Decode(&nominee); err != nil {
+			http.Error(w, "Invalid request", http.StatusBadRequest)
+			return
+		}
+		session, err := GetLunchSession(r.Context(), daprClient, id)
+		if err != nil || session == nil {
+			http.Error(w, "Session not found", http.StatusNotFound)
+			return
+		}
+		session.Nominated = &nominee
+		if err := SaveLunchSession(r.Context(), daprClient, *session); err != nil {
+			http.Error(w, "Failed to nominate", http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(w).Encode(session)
+	}
+}
+
+// Lock the order
+func LockSessionHandler(daprClient client.Client) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := mux.Vars(r)["id"]
+		session, err := GetLunchSession(r.Context(), daprClient, id)
+		if err != nil || session == nil {
+			http.Error(w, "Session not found", http.StatusNotFound)
+			return
+		}
+		session.Locked = true
+		if err := SaveLunchSession(r.Context(), daprClient, *session); err != nil {
+			http.Error(w, "Failed to lock session", http.StatusInternalServerError)
+			return
+		}
+		_ = PublishLunchSession(r.Context(), daprClient, *session) // notify via pubsub
+		json.NewEncoder(w).Encode(session)
+	}
+}

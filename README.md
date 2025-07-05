@@ -31,7 +31,7 @@ dapr init
 ```sh
 cd microservice
 go mod tidy
-dapr run --app-id lunchrush-backend --app-port 8080 --dapr-http-port 3500 --components-path ./components go run ./cmd/main.go
+dapr run --app-id lunchrush-backend --app-port 8080 -- go run ./cmd/main.go
 ```
 
 - The backend will be available at [http://localhost:8080](http://localhost:8080)

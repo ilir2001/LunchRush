@@ -44,10 +44,9 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onJoin }) => 
       <Button
         className="w-full"
         onClick={() => onJoin(session.id)}
-        disabled={session.locked}
-        variant={session.locked ? 'secondary' : 'primary'}
+        variant="primary"
       >
-        {session.locked ? 'Session Locked' : 'Join the Lunch'}
+        {session.locked ? 'View Details' : 'Join the Lunch'}
       </Button>
     </div>
   )
